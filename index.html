@@ -64,6 +64,7 @@ button {
 #yes {
   background: #ff2e63;
   color: white;
+  z-index: 1; /* Ensure Yes is always on top */
 }
 
 #yes:hover {
@@ -125,47 +126,39 @@ button {
 </div>
 
 <script>
-function moveNo() {
-  const noBtn = document.getElementById("no");
-  const container = document.querySelector(".container");
-  const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const container = document.querySelector(".container");
 
-  // Switch to absolute only when moving
+function moveNo() {
   noBtn.style.position = "absolute";
 
-  const containerRect = container.getBoundingClientRect();
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+
   const yesRect = yesBtn.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
 
   let x, y;
-  let safe = false;
+  let tries = 0;
 
-  while (!safe) {
-    x = Math.random() * (containerRect.width - noBtn.offsetWidth);
-    y = Math.random() * (containerRect.height - noBtn.offsetHeight);
-
-    const noLeft = containerRect.left + x;
-    const noTop = containerRect.top + y;
-    const noRight = noLeft + noBtn.offsetWidth;
-    const noBottom = noTop + noBtn.offsetHeight;
-
-    // Ensure no overlap with Yes button
-    if (
-      noRight < yesRect.left ||
-      noLeft > yesRect.right ||
-      noBottom < yesRect.top ||
-      noTop > yesRect.bottom
-    ) {
-      safe = true;
-    }
-  }
+  do {
+    x = Math.random() * (containerWidth - noBtn.offsetWidth);
+    y = Math.random() * (containerHeight - noBtn.offsetHeight - 50) + 20; // leave top padding
+    tries++;
+    if (tries > 100) break; // fail-safe
+  } while (
+    x + noBtn.offsetWidth > yesBtn.offsetLeft &&
+    x < yesBtn.offsetLeft + yesBtn.offsetWidth &&
+    y + noBtn.offsetHeight > yesBtn.offsetTop &&
+    y < yesBtn.offsetTop + yesBtn.offsetHeight
+  );
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
 
-// Reset No button on page load
 window.onload = function() {
-  const noBtn = document.getElementById("no");
   noBtn.style.position = "relative";
   noBtn.style.left = "0px";
   noBtn.style.top = "0px";
@@ -184,10 +177,7 @@ function createHearts() {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = Math.random() * 20 + 20 + "px";
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-      heart.remove();
-    }, 6000);
+    setTimeout(() => heart.remove(), 6000);
   }, 300);
 }
 </script>
