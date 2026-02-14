@@ -1,147 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Be My Valentine ❤️</title>
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body {
-  height: 100vh;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-/* Glass card */
-.container {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(15px);
-  padding: 50px;
-  border-radius: 20px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  width: 90%;
-  max-width: 500px;
-  animation: fadeIn 1.2s ease-in-out;
-  position: relative;
-}
-
-h1 {
-  font-size: 26px;
-  margin-bottom: 30px;
-}
-
-/* Button wrapper */
-.buttons {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  height: 80px;
-  align-items: center;
-}
-
-button {
-  padding: 12px 28px;
-  font-size: 18px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-#yes {
-  background: #ff2e63;
-  color: white;
-}
-
-#yes:hover {
-  transform: scale(1.1);
-}
-
-#no {
-  background: #444;
-  color: white;
-  position: relative;
-}
-
-/* Surprise section */
-#surprise {
-  display: none;
-  margin-top: 25px;
-  animation: popUp 0.8s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes popUp {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
-}
-
-/* Floating hearts */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
-  animation: floatUp 6s linear infinite;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-100vh); opacity: 0; }
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-  <h1>Will You Be My Valentine? 💘</h1>
-
-  <div class="buttons">
-    <button id="yes" onclick="showSurprise()">Yes 💖</button>
-    <button id="no" onmouseover="moveNo()">No 😝</button>
-  </div>
-
-  <div id="surprise">
-    <h2>Yayyyy!! ❤️🥰</h2>
-    <p>You are stuck with me forever 😌</p>
-  </div>
-</div>
-
 <script>
 function moveNo() {
   const noBtn = document.getElementById("no");
-  const container = document.querySelector(".buttons");
+  const container = document.querySelector(".container");
+  const yesBtn = document.getElementById("yes");
 
-  // Switch to absolute only when moving
   noBtn.style.position = "absolute";
 
-  const rect = container.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  const yesRect = yesBtn.getBoundingClientRect();
 
-  const x = Math.random() * (rect.width - noBtn.offsetWidth);
-  const y = Math.random() * (rect.height - noBtn.offsetHeight);
+  let x, y;
+  let safe = false;
+
+  while (!safe) {
+    x = Math.random() * (containerRect.width - noBtn.offsetWidth);
+    y = Math.random() * (containerRect.height - noBtn.offsetHeight);
+
+    const noLeft = containerRect.left + x;
+    const noTop = containerRect.top + y;
+    const noRight = noLeft + noBtn.offsetWidth;
+    const noBottom = noTop + noBtn.offsetHeight;
+
+    // Check overlap with Yes button
+    if (
+      noRight < yesRect.left ||
+      noLeft > yesRect.right ||
+      noBottom < yesRect.top ||
+      noTop > yesRect.bottom
+    ) {
+      safe = true;
+    }
+  }
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
 
-// Reset button properly on reload
 window.onload = function() {
   const noBtn = document.getElementById("no");
   noBtn.style.position = "relative";
@@ -151,24 +45,5 @@ window.onload = function() {
 
 function showSurprise() {
   document.getElementById("surprise").style.display = "block";
-  createHearts();
-}
-
-function createHearts() {
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 20 + "px";
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-      heart.remove();
-    }, 6000);
-  }, 300);
 }
 </script>
-
-</body>
-</html>
