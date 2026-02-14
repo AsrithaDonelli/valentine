@@ -126,15 +126,13 @@ button {
 
 <script>
 function moveNo() {
-const noBtn = document.getElementById("no");
-  const container = document.querySelector(".buttons");
+  const noBtn = document.getElementById("no");
   const container = document.querySelector(".container");
   const yesBtn = document.getElementById("yes");
 
   // Switch to absolute only when moving
-noBtn.style.position = "absolute";
+  noBtn.style.position = "absolute";
 
-  const rect = container.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
   const yesRect = yesBtn.getBoundingClientRect();
 
@@ -145,14 +143,12 @@ noBtn.style.position = "absolute";
     x = Math.random() * (containerRect.width - noBtn.offsetWidth);
     y = Math.random() * (containerRect.height - noBtn.offsetHeight);
 
-  const x = Math.random() * (rect.width - noBtn.offsetWidth);
-  const y = Math.random() * (rect.height - noBtn.offsetHeight);
     const noLeft = containerRect.left + x;
     const noTop = containerRect.top + y;
     const noRight = noLeft + noBtn.offsetWidth;
     const noBottom = noTop + noBtn.offsetHeight;
 
-    // Check overlap with Yes button
+    // Ensure no overlap with Yes button
     if (
       noRight < yesRect.left ||
       noLeft > yesRect.right ||
@@ -163,18 +159,20 @@ noBtn.style.position = "absolute";
     }
   }
 
-noBtn.style.left = x + "px";
-noBtn.style.top = y + "px";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
 
-// Reset button properly on reload
+// Reset No button on page load
 window.onload = function() {
-const noBtn = document.getElementById("no");
-noBtn.style.position = "relative";
-@@ -151,24 +45,5 @@ <h2>Yayyyy!! ❤️🥰</h2>
+  const noBtn = document.getElementById("no");
+  noBtn.style.position = "relative";
+  noBtn.style.left = "0px";
+  noBtn.style.top = "0px";
+};
 
 function showSurprise() {
-document.getElementById("surprise").style.display = "block";
+  document.getElementById("surprise").style.display = "block";
   createHearts();
 }
 
