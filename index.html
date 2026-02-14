@@ -22,9 +22,8 @@ body {
   overflow: hidden;
 }
 
-/* Glass container */
+/* Glass card */
 .container {
-  position: relative;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(15px);
   padding: 50px;
@@ -34,26 +33,32 @@ body {
   box-shadow: 0 15px 35px rgba(0,0,0,0.2);
   width: 90%;
   max-width: 500px;
-  animation: fadeIn 1.5s ease-in-out;
+  animation: fadeIn 1.2s ease-in-out;
+  position: relative;
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 30px;
 }
 
+/* Button wrapper */
 .buttons {
   position: relative;
-  height: 100px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  height: 80px;
+  align-items: center;
 }
 
 button {
-  padding: 12px 30px;
+  padding: 12px 28px;
   font-size: 18px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.25s ease;
 }
 
 #yes {
@@ -68,14 +73,13 @@ button {
 #no {
   background: #444;
   color: white;
-  position: absolute;
-  left: 150px;
-  transition: 0.2s ease;
+  position: relative;
 }
 
+/* Surprise section */
 #surprise {
   display: none;
-  margin-top: 30px;
+  margin-top: 25px;
   animation: popUp 0.8s ease forwards;
 }
 
@@ -91,7 +95,7 @@ button {
 
 /* Floating hearts */
 .heart {
-  position: absolute;
+  position: fixed;
   bottom: -20px;
   font-size: 20px;
   animation: floatUp 6s linear infinite;
@@ -125,14 +129,25 @@ function moveNo() {
   const noBtn = document.getElementById("no");
   const container = document.querySelector(".buttons");
 
-  const containerRect = container.getBoundingClientRect();
+  // Switch to absolute only when moving
+  noBtn.style.position = "absolute";
 
-  const x = Math.random() * (containerRect.width - noBtn.offsetWidth);
-  const y = Math.random() * (containerRect.height - noBtn.offsetHeight);
+  const rect = container.getBoundingClientRect();
+
+  const x = Math.random() * (rect.width - noBtn.offsetWidth);
+  const y = Math.random() * (rect.height - noBtn.offsetHeight);
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
+
+// Reset button properly on reload
+window.onload = function() {
+  const noBtn = document.getElementById("no");
+  noBtn.style.position = "relative";
+  noBtn.style.left = "0px";
+  noBtn.style.top = "0px";
+};
 
 function showSurprise() {
   document.getElementById("surprise").style.display = "block";
